@@ -30,8 +30,11 @@ public class Minefield {
      * Understand the QGen.java class to know what type of queue you will be working with and methods you can utilize
      */
 
-    private Cell[][] board;
+    private int row;
+    private int columns;
     private int flags;
+    public Cell[][] cell;
+    boolean flag=false;
 
     
     /**
@@ -43,11 +46,12 @@ public class Minefield {
      * @param columns    Number of columns.
      * @param flags      Number of flags, should be equal to mines
      */
-    public Minefield(int rows, int columns, int flags) {
-        board = new Cell[rows][columns];
-        this.flags = flags;
+   public Minefield(int rows, int columns, int flags) {
+                this.row = rows;
+                this.columns = columns;
+                this.flags = flags;
+                cell = new Cell[rows][columns];
     }
-
     /**
      * evaluateField
      * 
@@ -58,9 +62,26 @@ public class Minefield {
      * 
      */
     public void evaluateField() {
-        
+        for (int i = 0; i < cell.length; i++) {
+            for (int j = 0; j < cell[0].length; j++) {
+                if (cell[i][j].getStatus().equals("M")) {
+                    for (int row = i - 1; row <= i + 1; row++) {
+                        for (int col = j - 1; col <= j + 1; col++) {// Check for valid indices
+                            if (row >= 0 && row < cell.length && col >= 0 && col < cell[0].length) {// Skip the current mine cell
+                                if (row == i && col == j) {
+                                    continue;
+                                }
+                                if ("M".equals(cell[row][col].getStatus())) {
+                                    int currentStatus = Integer.parseInt(cell[row][col].getStatus());
+                                    cell[row][col].setStatus(String.valueOf(currentStatus + 1));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-
     /**
      * createMines
      * 
@@ -72,12 +93,15 @@ public class Minefield {
      * @param y        Start y, avoid placing on this square.
      * @param mines      Number of mines to place.
      */
-
-
-
     public void createMines(int x, int y, int mines) {
+        Random ran = new Random();
+        int row = ran.nextInt();
+        int column = ran.nextInt();
+        if (row != x && column != y && !cell[row][column].getRevealed()) {
+            cell[row][column].setStatus("M");
+            mines--;
+        }
     }
-
     /**
      * guess
      * 
@@ -86,15 +110,29 @@ public class Minefield {
      * If the cell has a 0 call the revealZeroes() method or if the cell has a mine end the game.
      * At the end reveal the cell to the user.
      * 
-     * 
+     * \
      * @param x       The x value the user entered.
      * @param y       The y value the user entered.
      * @param flag    A boolean value that allows the user to place a flag on the corresponding square.
      * @return boolean Return false if guess did not hit mine or if flag was placed, true if mine found.
      */
-    public boolean guess(int x, int y, boolean flag) {
-
-    }
+    public boolean guess(int x, int y, boolean flag){
+            if (x >= 0 && x < 9 && y >= 0 && y < 9) {
+                if (flag) {
+                    cell[x][y].setStatus("F");
+                    flags = flags - 1;
+                } else {
+                    if (cell[x][y].getStatus() == "0") {
+                        revealZeroes(x, y);
+                    }
+                    if (cell[x][y].getStatus() == "M") {
+                        gameOver();
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
     /**
      * gameOver
@@ -106,7 +144,19 @@ public class Minefield {
      * @return boolean Return false if game is not over and squares have yet to be revealed, otheriwse return true.
      */
     public boolean gameOver() {
-
+        Minefield point = new Minefield(row, columns, flags);
+        if (point.guess(row, columns, flag) == false) {
+            return true;
+        } else {
+            for (int i = 0; i < row; i++) {
+                for (int j = 0; j < columns; j++) {
+                    if (!cell[i][j].getRevealed() && !"M".equals(cell[i][j].getStatus())) {
+                        return false;  // The game is not over yet
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -138,9 +188,23 @@ public class Minefield {
      * @param y     The y value the user entered.
      */
     public void revealStartingArea(int x, int y) {
-
+        StackGen<Cell[][]> stack = new StackGen<>();
+        stack.push(cell[x][y]);
+        while (!stack.isEmpty()) {
+            Cell [][] currentCell = stack.pop();
+            currentCell.setRevealed(true);
+                for (int row = - 1; row <= x + 1; row++) {
+                    for (int col = y - 1; col <= y + 1; col++) {// Check for valid indices
+                        if (row >= 0 && row < cell.length && col >= 0 && col < cell[0].length) {
+                            if (!cell[row][col].getRevealed() && cell[row][col].getStatus() != "0") {
+                                stack.push(cell[row][col]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-
     /**
      * For both printing methods utilize the ANSI colour codes provided! 
      * 
@@ -165,4 +229,3 @@ public class Minefield {
     public String toString() {
 
     }
-}
