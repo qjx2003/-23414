@@ -33,7 +33,7 @@ public class Minefield {
     private int row;
     private int columns;
     private int flags;
-    public Cell[][] cell;
+    public Cell[][] board;
     boolean flag=false;
 
     
@@ -46,11 +46,17 @@ public class Minefield {
      * @param columns    Number of columns.
      * @param flags      Number of flags, should be equal to mines
      */
-   public Minefield(int rows, int columns, int flags) {
-                this.row = rows;
-                this.columns = columns;
-                this.flags = flags;
-                cell = new Cell[rows][columns];
+  public Minefield(int rows, int columns, int flags) {//完成
+        this.row = rows;
+        this.columns =  columns;
+        this.flags = flags;
+
+        board = new Cell[rows][columns];
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                board[row][col] = new Cell(false, "-");
+            }
+        }
     }
     /**
      * evaluateField
@@ -61,7 +67,7 @@ public class Minefield {
      * When a mine is found check the surrounding adjacent tiles. If another mine is found during this check, increment adjacent cells status by 1.
      * 
      */
-    public void evaluateField() {
+    /*public void evaluateField() {
         for (int i = 0; i < cell.length; i++) {
             for (int j = 0; j < cell[0].length; j++) {
                 if (cell[i][j].getStatus().equals("M")) {
@@ -81,7 +87,7 @@ public class Minefield {
                 }
             }
         }
-    }
+    }*/
     /**
      * createMines
      * 
@@ -93,12 +99,17 @@ public class Minefield {
      * @param y        Start y, avoid placing on this square.
      * @param mines      Number of mines to place.
      */
-    public void createMines(int x, int y, int mines) {
+    public void createMines(int x, int y, int mines) {//应该没问题
         Random ran = new Random();
-        int row = ran.nextInt();
-        int column = ran.nextInt();
-        if (row != x && column != y && !cell[row][column].getRevealed()) {
-            cell[row][column].setStatus("M");
+        while(mines > 0){
+            //Generate random coordinates
+            int mineRow = ran.nextInt(row);
+            int mineCol = ran.nextInt(columns);
+
+            //Test if the coordinate is equal to the starting point, or is mine, or has been revealed
+            if((mineRow==x && mineCol==y) || board[mineRow][mineCol].getStatus() == "M" || board[mineRow][mineCol].getRevealed())
+                continue;
+            board[mineRow][mineCol] = new Cell(false, "M");
             mines--;
         }
     }
@@ -116,23 +127,32 @@ public class Minefield {
      * @param flag    A boolean value that allows the user to place a flag on the corresponding square.
      * @return boolean Return false if guess did not hit mine or if flag was placed, true if mine found.
      */
-    public boolean guess(int x, int y, boolean flag){
-            if (x >= 0 && x < 9 && y >= 0 && y < 9) {
-                if (flag) {
-                    cell[x][y].setStatus("F");
-                    flags = flags - 1;
-                } else {
-                    if (cell[x][y].getStatus() == "0") {
-                        revealZeroes(x, y);
-                    }
-                    if (cell[x][y].getStatus() == "M") {
-                        gameOver();
-                        return true;
-                    }
-                }
-            }
+    public boolean guess(int x, int y, boolean flag) {//应该没有问题
+        if (x >= row || x < 0 || y >= columns || y < 0)
             return false;
+
+        if (flag) {//flag or de-flag
+            if(board[x][y].getStatus() == "F"){
+                board[x][y].setStatus("-");
+                flags++;
+            }
+            else {
+                board[x][y].setStatus("F");
+                flags--;
+            }
+            return true;
+        } else {//reveal the cell
+            if (!board[x][y].getRevealed()) {
+                board[x][y].setRevealed(true);
+                if(board[x][y].getStatus() == "M")
+                    gameOver();
+                else if (board[x][y].getStatus() == "0")
+                    revealZeroes(x,y);
+                return true;
+            }
         }
+        return false;
+    }
 
     /**
      * gameOver
@@ -143,19 +163,21 @@ public class Minefield {
      * 
      * @return boolean Return false if game is not over and squares have yet to be revealed, otheriwse return true.
      */
-    public boolean gameOver() {
-        Minefield point = new Minefield(row, columns, flags);
-        if (point.guess(row, columns, flag) == false) {
-            return true;
-        } else {
-            for (int i = 0; i < row; i++) {
-                for (int j = 0; j < columns; j++) {
-                    if (!cell[i][j].getRevealed() && !"M".equals(cell[i][j].getStatus())) {
-                        return false;  // The game is not over yet
-                    }
+    public boolean gameOver() {//应该没问题
+        for(int i = 0; i < row; i++){
+            for(int j = 0; j < columns; j++){
+                //if a mine is revealed, player lose, return true
+                if(board[i][j].getRevealed() && board[i][j].getStatus().equals("M")){
+                    System.out.println("You lose");
+                    return true;
+                }
+                // if a cell is not mine and hasn't been revealed, return false;
+                if(!(board[i][j].getRevealed()) && board[i][j].getStatus().equals("M")){
+                    return false;
                 }
             }
         }
+        System.out.println("you win!");
         return true;
     }
 
@@ -187,7 +209,7 @@ public class Minefield {
      * @param x     The x value the user entered.
      * @param y     The y value the user entered.
      */
-    public void revealStartingArea(int x, int y) {
+    /*public void revealStartingArea(int x, int y) {
         StackGen<Cell[][]> stack = new StackGen<>();
         stack.push(cell[x][y]);
         while (!stack.isEmpty()) {
@@ -204,7 +226,7 @@ public class Minefield {
                 }
             }
         }
-    }
+    }*/
     /**
      * For both printing methods utilize the ANSI colour codes provided! 
      * 
