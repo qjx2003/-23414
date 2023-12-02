@@ -239,8 +239,13 @@ public class Minefield {
      * @function This method should print the entire minefield, regardless if the user has guessed a square.
      * *This method should print out when debug mode has been selected. 
      */
-    public void debug() {
-
+    public void debug() {//应该能用
+        for(int i = 0; i < row; i++){
+            for(int j = 0; j < columns; j++){
+                System.out.print(board[i][j].getStatus() + " ");
+            }
+            System.out.println();
+        }
     }
 
     /**
