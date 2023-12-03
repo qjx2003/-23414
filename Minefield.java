@@ -34,7 +34,6 @@ public class Minefield {
     private int columns;
     private int flags;
     public Cell[][] board;
-    boolean flag=false;
 
     
     /**
