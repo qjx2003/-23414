@@ -15,9 +15,24 @@ import java.util.Scanner;
  */
 
 public class main(String[] args) {
-
-
-    while(/* ! minefield.gameOver() */ ){
+    Scanner scanner = new Scanner(System.in);
+    System.out.print("Enter the number of rows: ");
+    int rows = scanner.nextInt();
+    System.out.print("Enter the number of columns: ");
+    int columns = scanner.nextInt();
+    System.out.print("Enter the number of mines: ");
+    int mines = scanner.nextInt();
+    Minefield mode = new Minefield(rows,columns,mines);
+    while(!mode.gameOver()){
+            mode.createMines(0,0,mines);
+            mode.evaluateField();
+            System.out.print("Enter the starting row: ");
+            int startRow = scanner.nextInt();
+            System.out.print("Enter the starting column: ");
+            int startCol = scanner.nextInt();
+            mode.revealStartingArea(startRow, startCol);
+            System.out.println("Initial Minefield:");
+            System.out.println(mode.toString());
     }
-    
 }
+
