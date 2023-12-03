@@ -16,23 +16,31 @@ import java.util.Scanner;
 
 public class main(String[] args) {
     Scanner scanner = new Scanner(System.in);
-    System.out.print("Enter the number of rows: ");
+    System.out.println("Enter the number of rows: ");
     int rows = scanner.nextInt();
-    System.out.print("Enter the number of columns: ");
+    System.out.println("Enter the number of columns: ");
     int columns = scanner.nextInt();
-    System.out.print("Enter the number of mines: ");
+    System.out.println("Enter the number of mines: ");
     int mines = scanner.nextInt();
     Minefield mode = new Minefield(rows,columns,mines);
+    
     while(!mode.gameOver()){
             mode.createMines(0,0,mines);
             mode.evaluateField();
-            System.out.print("Enter the starting row: ");
-            int startRow = scanner.nextInt();
-            System.out.print("Enter the starting column: ");
-            int startCol = scanner.nextInt();
-            mode.revealStartingArea(startRow, startCol);
+            System.out.println("Enter the row: ");
+            int row = scanner.nextInt();
+            System.out.println("Enter the starting column: ");
+            int col = scanner.nextInt();
+            if(row>=0 && row<rows && col>=0 && col<columns){
+                boolean flag = scanner.nextBoolean();
+                System.out.print("Enter the boolean value flag ");
+                while(!mode.guess(row,col,flag)){
+                    mode.revealStartingArea(row, col);
+                    mode.revealZeroes(row,col);
+                }
+                //should end;
+            }
             System.out.println("Initial Minefield:");
             System.out.println(mode.toString());
     }
 }
-
