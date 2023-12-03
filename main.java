@@ -23,7 +23,7 @@ public class main(String[] args) {
     System.out.println("Enter the number of mines: ");
     int mines = scanner.nextInt();
     Minefield mode = new Minefield(rows,columns,mines);
-    
+
     while(!mode.gameOver()){
             mode.createMines(0,0,mines);
             mode.evaluateField();
@@ -40,7 +40,9 @@ public class main(String[] args) {
                 }
                 //should end;
             }
+            mode.debug();
             System.out.println("Initial Minefield:");
             System.out.println(mode.toString());
     }
 }
+
