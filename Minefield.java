@@ -316,7 +316,7 @@ public class Minefield {
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < columns; j++) {
                 if(board[i][j].getRevealed() || board[i][j].getStatus()=="F"){
-                    result+=getCellRepresentation(i,j);
+                    result+=getBoard(i,j);
                 }else{
                     result += "-" + ANSI_GREY_BACKGROUND;
                 }
@@ -325,7 +325,7 @@ public class Minefield {
         }
         return result;
     }
-    private String getCellRepresentation(int x, int y) {
+    private String getBoard(int x, int y) {
         String status = board[x][y].getStatus();
 
         switch (status) {
