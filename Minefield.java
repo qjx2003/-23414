@@ -58,36 +58,56 @@ public class Minefield {
             }
         }
     }
-    /**
-     * evaluateField
-     * 
-     *
-     * @function:
-     * Evaluate entire array.
-     * When a mine is found check the surrounding adjacent tiles. If another mine is found during this check, increment adjacent cells status by 1.
-     * 
-     */
-    /*public void evaluateField() {
-        for (int i = 0; i < cell.length; i++) {
-            for (int j = 0; j < cell[0].length; j++) {
-                if (cell[i][j].getStatus().equals("M")) {
-                    for (int row = i - 1; row <= i + 1; row++) {
-                        for (int col = j - 1; col <= j + 1; col++) {// Check for valid indices
-                            if (row >= 0 && row < cell.length && col >= 0 && col < cell[0].length) {// Skip the current mine cell
-                                if (row == i && col == j) {
-                                    continue;
-                                }
-                                if ("M".equals(cell[row][col].getStatus())) {
-                                    int currentStatus = Integer.parseInt(cell[row][col].getStatus());
-                                    cell[row][col].setStatus(String.valueOf(currentStatus + 1));
-                                }
-                            }
-                        }
+   public void evaluateField() {//应该可以
+        for(int i = 0; i < row; i++) {
+            for (int j = 0; j < columns; j++) {
+
+                if(board[i][j].getStatus().equals("M"))
+                    continue;
+
+                int mineSurround = 0;
+
+                //check the cells above
+                if(i-1 >= 0){
+                    if(board[i-1][j].getStatus().equals("M"))
+                        mineSurround++;
+                    if(j-1 >= 0){
+                        if(board[i-1][j-1].getStatus().equals("M"))
+                            mineSurround++;
+                    }
+                    if(j+1 < columns){
+                        if(board[i-1][j+1].getStatus().equals("M"))
+                            mineSurround++;
                     }
                 }
+
+                //check the cells below
+                if(i+1 < row){
+                    if(board[i+1][j].getStatus().equals("M"))
+                        mineSurround++;
+                    if(j-1 >= 0){
+                        if(board[i+1][j-1].getStatus().equals("M"))
+                            mineSurround++;
+                    }
+                    if(j+1 < columns){
+                        if(board[i+1][j+1].getStatus().equals("M"))
+                            mineSurround++;
+                    }
+                }
+
+                //check the cells to the left and right
+                if(j-1 >= 0){
+                    if(board[i][j-1].getStatus().equals("M"))
+                        mineSurround++;
+                }
+                if(j+1 < row){
+                    if(board[i][j+1].getStatus().equals("M"))
+                        mineSurround++;
+                }
+                board[i][j] = new Cell(false, ""+mineSurround);
             }
         }
-    }*/
+    }
     /**
      * createMines
      * 
