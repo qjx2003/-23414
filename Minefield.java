@@ -212,9 +212,31 @@ public class Minefield {
      * @param x      The x value the user entered.
      * @param y      The y value the user entered.
      */
-    public void revealZeroes(int x, int y) {
+    public void revealZeroes(int x, int y) {//应该可以,睡了不想了
+        Stack1Gen<int[]> cells = new Stack1Gen<>();
+        cells.push(new int[] {x, y});
 
+        while(!cells.isEmpty()){
+            int[] temp = cells.pop();
+            x = temp[0];
+            y = temp[1];
 
+            board[x][y].setRevealed(true);
+
+            //if a neighbor cell in bounds, equal to 0 and unrevealed, push into the stack
+            //down
+            if(x < row-1 && !board[x + 1][y].getRevealed() && board[x + 1][y].getStatus().equals("0"))
+                cells.push(new int[] {x+1, y});
+            //up
+            if(x > 0 && !board[x - 1][y].getRevealed() && board[x - 1][y].getStatus().equals("0"))
+                cells.push(new int[] { x - 1, y});
+            //right
+            if(y < columns-1 &&  !board[x][y + 1] .getRevealed() && board[x][y + 1].getStatus().equals("0"))
+                cells.push(new int[] { x, y + 1});
+            //left
+            if (y > 0 && !board[x][y - 1].getRevealed() && board[x][y - 1].getStatus().equals("0"))
+                cells.push(new int[] { x, y - 1});
+        }
     }
 
     /**
@@ -229,24 +251,35 @@ public class Minefield {
      * @param x     The x value the user entered.
      * @param y     The y value the user entered.
      */
-    /*public void revealStartingArea(int x, int y) {
-        StackGen<Cell[][]> stack = new StackGen<>();
-        stack.push(cell[x][y]);
-        while (!stack.isEmpty()) {
-            Cell [][] currentCell = stack.pop();
-            currentCell.setRevealed(true);
-                for (int row = - 1; row <= x + 1; row++) {
-                    for (int col = y - 1; col <= y + 1; col++) {// Check for valid indices
-                        if (row >= 0 && row < cell.length && col >= 0 && col < cell[0].length) {
-                            if (!cell[row][col].getRevealed() && cell[row][col].getStatus() != "0") {
-                                stack.push(cell[row][col]);
-                            }
-                        }
-                    }
-                }
-            }
+    public void revealStartingArea(int x, int y) {//应该ok,但是文件里的图好像把mine给reveal了,感觉很奇怪,可以去oh问一下,我觉得是图的问题
+        Q1Gen<int[]> cells = new Q1Gen<>();
+        cells.add(new int[] {x, y});
+
+        while (cells.length() != 0){
+            int[] temp = cells.remove();
+            x = temp[0];
+            y = temp[1];
+
+            //break the loop if a mine is found
+            if(board[x][y].getStatus().equals("M"))
+                return;
+
+            board[x][y].setRevealed(true);
+
+            //down
+            if(x < row-1 && !board[x + 1][y].getRevealed())
+                cells.add(new int[] {x+1, y});
+            //up
+            if(x > 0 && !board[x - 1][y].getRevealed())
+                cells.add(new int[] { x - 1, y});
+            //right
+            if(y < columns-1 &&  !board[x][y + 1] .getRevealed())
+                cells.add(new int[] { x, y + 1});
+            //left
+            if (y > 0 && !board[x][y - 1].getRevealed())
+                cells.add(new int[] { x, y - 1});
         }
-    }*/
+    }
     /**
      * For both printing methods utilize the ANSI colour codes provided! 
      * 
