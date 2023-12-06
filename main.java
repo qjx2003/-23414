@@ -76,10 +76,13 @@ public class main {
             if (row >= 0 && row < rows && col >= 0 && col < columns) {
                 boolean flag = scanner.nextBoolean();
                 System.out.print("Enter the boolean value flag ");
-                mode.guess(row, col, flag)
+                if(mode.guess(row, col, flag))
+                    break;
                 //should end;
             }
-            mode.debug();
+            if(debugOn == true)
+                mode.debug();
+                
             System.out.println("Initial Minefield:");
             System.out.println(mode.toString());
         }
