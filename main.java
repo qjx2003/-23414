@@ -76,10 +76,7 @@ public class main {
             if (row >= 0 && row < rows && col >= 0 && col < columns) {
                 boolean flag = scanner.nextBoolean();
                 System.out.print("Enter the boolean value flag ");
-                while (!mode.guess(row, col, flag)) {
-                    mode.revealStartingArea(row, col);
-                    mode.revealZeroes(row, col);
-                }
+                mode.guess(row, col, flag)
                 //should end;
             }
             mode.debug();
