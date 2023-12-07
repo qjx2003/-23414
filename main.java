@@ -56,9 +56,9 @@ public class main {
         Minefield mode = new Minefield(rows, columns, mines);
 
         //starting point
-        System.out.println("Enter the row: ");
+        System.out.println("\nEnter the row: ");
         int row = scanner.nextInt();
-        System.out.println("Enter the column: ");
+        System.out.println("\nEnter the column: ");
         int col = scanner.nextInt();
 
         //create mines, evaluate the field and reveal starting area.
@@ -67,13 +67,14 @@ public class main {
             mode.evaluateField();
             mode.revealStartingArea(row,col);
         }
-        System.out.println("Initial Minefield:");
         if(debugMode == 0)
             debugOn = true;
-        if(debugOn)
+        if(debugOn) {
+            System.out.println("Debug mode:");
             mode.debug();
+        }
+        System.out.println("Minefield:");
         System.out.println(mode.toString());
-        
 
         while (!mode.gameOver()) {
             System.out.println("Enter the row: ");
@@ -93,10 +94,12 @@ public class main {
                     break;
                 //should end;
             }
-            if(debugOn)
-                mode.debug();
+            if(debugOn) {
+            System.out.println("Debug mode:");
+            mode.debug();
+        }
                 
-            System.out.println("Minefield:");
+            System.out.println("\nMinefield:");
             System.out.println(mode.toString());
         }
     }
