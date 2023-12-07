@@ -81,6 +81,7 @@ public class main {
             if (row >= 0 && row < rows && col >= 0 && col < columns) {
                 System.out.print("place a flag or reveal the cell? \nfalg: 0\nreveal: 1");
                 int temp = scanner.nextInt();
+                boolean flag = false;
                 if(temp == 0)
                     flag = true;
                 if(temp == 1)
