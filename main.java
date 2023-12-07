@@ -68,7 +68,9 @@ public class main {
             mode.revealStartingArea(row,col);
         }
         System.out.println("Initial Minefield:");
-        if(debugOn == true)
+        if(debugMode == 0)
+            debugOn = true;
+        if(debugOn)
             mode.debug();
         System.out.println(mode.toString());
         
@@ -79,7 +81,7 @@ public class main {
             System.out.println("Enter the starting column: ");
             col = scanner.nextInt();
             if (row >= 0 && row < rows && col >= 0 && col < columns) {
-                System.out.print("place a flag or reveal the cell? \nfalg: 0\nreveal: 1");
+                System.out.println("place a flag or reveal the cell? \nfalg: 0\nreveal: 1");
                 int temp = scanner.nextInt();
                 boolean flag = false;
                 if(temp == 0)
@@ -91,7 +93,7 @@ public class main {
                     break;
                 //should end;
             }
-            if(debugOn == true)
+            if(debugOn)
                 mode.debug();
                 
             System.out.println("Minefield:");
