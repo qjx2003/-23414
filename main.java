@@ -67,6 +67,11 @@ public class main {
             mode.evaluateField();
             mode.revealStartingArea(row,col);
         }
+        System.out.println("Initial Minefield:");
+        if(debugOn == true)
+            mode.debug();
+        System.out.println(mode.toString());
+        
 
         while (!mode.gameOver()) {
             System.out.println("Enter the row: ");
@@ -74,16 +79,21 @@ public class main {
             System.out.println("Enter the starting column: ");
             col = scanner.nextInt();
             if (row >= 0 && row < rows && col >= 0 && col < columns) {
-                boolean flag = scanner.nextBoolean();
-                System.out.print("Enter the boolean value flag ");
-                if(mode.guess(row, col, flag))
+                System.out.print("place a flag or reveal the cell? \nfalg: 0\nreveal: 1");
+                int temp = scanner.nextInt();
+                if(temp == 0)
+                    flag = true;
+                if(temp == 1)
+                    flag = false;
+
+                if(!mode.guess(row, col, flag))
                     break;
                 //should end;
             }
             if(debugOn == true)
                 mode.debug();
                 
-            System.out.println("Initial Minefield:");
+            System.out.println("Minefield:");
             System.out.println(mode.toString());
         }
     }
