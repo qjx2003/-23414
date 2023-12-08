@@ -130,7 +130,7 @@ public class Minefield {
             int mineCol = ran.nextInt(columns);
 
             //Test if the coordinate is equal to the starting point, or is mine, or has been revealed
-            if ((mineRow == x && mineCol == y) || board[mineRow][mineCol].getStatus() == "M" || board[mineRow][mineCol].getRevealed())
+            if ((mineRow == x && mineCol == y) || board[mineRow][mineCol].getStatus().equals("M") || board[mineRow][mineCol].getRevealed())
                 continue;
             board[mineRow][mineCol] = new Cell(false, "M");
             mines--;
@@ -153,26 +153,24 @@ public class Minefield {
      * @return boolean Return false if guess did not hit mine or if flag was placed, true if mine found.
      */
     public boolean guess(int x, int y, boolean flag) {//应该没有问题
-        if (x >= row || x < 0 || y >= columns || y < 0)
+        if (x >= row || x < 0 || y >= columns || y < 0){
+            System.out.println("Wrong coordinate");
             return false;
+        }
 
-        if (flag) {//flag or de-flag
-            if (board[x][y].getStatus() == "F") {
-                board[x][y].setStatus("-");
-                flags++;
-            } else {
+        if (flag) {//flag
                 board[x][y].setStatus("F");
+                board[x][y].setRevealed(true);
                 flags--;
-            }
-            return true;
+            return false;
         } else {//reveal the cell
             if (!board[x][y].getRevealed()) {
                 board[x][y].setRevealed(true);
-                if (board[x][y].getStatus() == "M")
-                    gameOver();
-                else if (board[x][y].getStatus() == "0")
+                if (board[x][y].getStatus().equals("M"))
+                    return true;
+                else if (board[x][y].getStatus().equals("0"))
                     revealZeroes(x, y);
-                return true;
+                return false;
             }
         }
         return false;
@@ -190,18 +188,11 @@ public class Minefield {
     public boolean gameOver() {//应该没问题
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < columns; j++) {
-                //if a mine is revealed, player lose, return true
-                if (board[i][j].getRevealed() && board[i][j].getStatus().equals("M")) {
-                    System.out.println("You lose");
-                    return true;
-                }
-                // if a cell is not mine and hasn't been revealed, return false;
-                if (!(board[i][j].getRevealed()) && board[i][j].getStatus().equals("M")) {
+                if(!board[i][j].getRevealed()){
                     return false;
                 }
             }
         }
-        System.out.println("you win!");
         return true;
     }
 
@@ -264,11 +255,10 @@ public class Minefield {
             x = temp[0];
             y = temp[1];
 
+            board[x][y].setRevealed(true);
             //break the loop if a mine is found
             if (board[x][y].getStatus().equals("M"))
                 return;
-
-            board[x][y].setRevealed(true);
 
             //down
             if (x < row - 1 && !board[x + 1][y].getRevealed()) //我觉得光check x你不能知道x-1的范围所以我觉得不是很严谨，也可能是我理解的不对。
@@ -300,7 +290,7 @@ public class Minefield {
     public void debug() {//应该能用
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < columns; j++) {
-                System.out.print(board[i][j].getStatus() + " ");
+                System.out.print(getBoard(i,j));
             }
             System.out.println();
         }
@@ -315,7 +305,7 @@ public class Minefield {
         String result = new String("");
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < columns; j++) {
-                if(board[i][j].getRevealed() || board[i][j].getStatus()=="F"){
+                if(board[i][j].getRevealed() || board[i][j].getStatus().equals("F")){
                     result+=getBoard(i,j);
                 }else{
                     result += "-" + ANSI_GREY_BACKGROUND;
