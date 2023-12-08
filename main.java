@@ -37,7 +37,7 @@ public class main {
         if(difficulty == 0){
             rows = 5;
             columns = 5;
-            mines = 5;
+            mines = 2;
             flags = 5;
         }
         if(difficulty == 1){
@@ -90,17 +90,29 @@ public class main {
                 if(temp == 1)
                     flag = false;
 
-                if(!mode.guess(row, col, flag))
+                boolean mine = mode.guess(row, col, flag);
+
+                if(mine) {
+                    System.out.println("---You lose!----");
                     break;
+                }
+
+                if(mode.gameOver()){
+                    System.out.println("---You win!---");
+                    break;
+                }
+
                 //should end;
             }
             if(debugOn) {
-            System.out.println("Debug mode:");
-            mode.debug();
-        }
-                
+                System.out.println("Debug mode:");
+                mode.debug();
+            }
+
             System.out.println("\nMinefield:");
             System.out.println(mode.toString());
         }
+        System.out.println("\nMinefield:");
+        System.out.println(mode.toString());
     }
 }
